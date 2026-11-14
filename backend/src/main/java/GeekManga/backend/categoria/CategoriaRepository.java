@@ -1,4 +1,4 @@
-package GeekManga.backend.repository;
+package GeekManga.backend.categoria;
 
 public interface CategoriaRepository {
 }

@@ -1,4 +1,4 @@
-package GeekManga.backend.repository;
+package GeekManga.backend.producto;
 
 public interface ProductoRepository {
 }

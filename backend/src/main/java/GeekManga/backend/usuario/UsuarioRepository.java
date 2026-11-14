@@ -1,4 +1,4 @@
-package GeekManga.backend.repository;
+package GeekManga.backend.usuario;
 
 public interface UsuarioRepository {
 }

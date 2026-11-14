@@ -1,4 +1,4 @@
-package GeekManga.backend.controller;
+package GeekManga.backend.categoria;
 
 public class CategoriaController {
 }
