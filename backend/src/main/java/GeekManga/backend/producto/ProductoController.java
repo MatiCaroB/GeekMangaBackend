@@ -5,12 +5,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -259,7 +258,7 @@ public class ProductoController {
 
 
     })
-    @GetMapping("/buscar/{producto}")
+    @GetMapping("/buscar/nombre/{producto}")
     public ResponseEntity<Producto> buscarPorNombre(@PathVariable String producto){
         Producto productos = productoService.buscarPorNombre(producto);
         return ResponseEntity.ok(productos);

@@ -1,4 +1,4 @@
-package GeekManga.backend.producto;
+package GeekManga.backend.error;
 
 public class RecursoNoEncontradoException extends RuntimeException {
     public RecursoNoEncontradoException(String message) {

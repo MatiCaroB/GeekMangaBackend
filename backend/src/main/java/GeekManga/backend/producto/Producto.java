@@ -1,5 +1,6 @@
 package GeekManga.backend.producto;
 
+import GeekManga.backend.categoria.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "producto")
+@Table(name = "productos")
 @Schema(description = "Entidad que representa a un producto registrado en el sistema")
 @Entity
 public class Producto {
@@ -40,7 +41,7 @@ public class Producto {
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private String producto;
 
-    @NotNull
+
     @Schema(description = "Precio del producto",
             example = "10000",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
@@ -52,7 +53,7 @@ public class Producto {
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private String marca;
 
-    @NotNull
+
     @Schema(description = "Unidades disponibles para venta del producto",
             example = "14",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
@@ -64,13 +65,6 @@ public class Producto {
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private int stockCritico;
 
-    @NotBlank
-    @Schema(description = "Categoria, tipo, al que pertenece el producto",
-            example = "Tecnología",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
-    private String categoria;
-
-
     @Schema(description = "Señala al sistema si un producto debe llevar su precio de oferta o no",
             example = "1",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
@@ -81,7 +75,7 @@ public class Producto {
     @Schema(description = "Precio perteneciente únicamente a cuando un producto tiene su oferta activa",
             example = "3900",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
-    private int precioOferta;
+    private Integer precioOferta;
 
 
     @Size(min = 1, max = 300)
@@ -94,4 +88,8 @@ public class Producto {
             example = "carpeta/carpeta/archivo.jpg",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private String urlFoto;
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 }

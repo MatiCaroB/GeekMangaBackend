@@ -1,5 +1,6 @@
 package GeekManga.backend.producto;
 
+import GeekManga.backend.error.RecursoNoEncontradoException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
