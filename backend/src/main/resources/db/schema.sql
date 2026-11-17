@@ -3,6 +3,15 @@ CREATE TABLE IF NOT EXISTS categorias (
     nombre_categoria VARCHAR(100) NOT NULL UNIQUE
 );
 
+CREATE TABLE IF NOT EXISTS usuarios (
+    id BIGINT AUTO_INCREMENT    PRIMARY KEY,
+    nombre                      VARCHAR(100)    NOT NULL
+    apellidos                   VARCHAR(100)    ,
+    run                         VARCHAR(10)     NOT NULL UNIQUE,
+    correo                      VARCHAR(50)     NOT NULL,
+    password                    VARCHAR(100)    NOT NULL,
+    tipoUsuario                 VARCHAR(20)     NOT NULL)
+
 CREATE TABLE IF NOT EXISTS productos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     codigo VARCHAR(50) NOT NULL UNIQUE,
