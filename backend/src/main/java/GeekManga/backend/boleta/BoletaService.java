@@ -1,13 +1,11 @@
 package GeekManga.backend.boleta;
 
-
 import GeekManga.backend.detalle.DetalleBoleta;
 import GeekManga.backend.dto.LineaPedido;
+import GeekManga.backend.error.RecursoNoEncontradoException;
 import GeekManga.backend.producto.Producto;
-import GeekManga.backend.producto.ProductoRepository;
 import GeekManga.backend.producto.ProductoService;
 import GeekManga.backend.usuario.Usuario;
-import GeekManga.backend.usuario.UsuarioRepository;
 import GeekManga.backend.usuario.UsuarioService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +19,17 @@ import java.util.List;
 public class BoletaService {
 
     private final BoletaRepository boletaRepository;
-    private final ProductoRepository productoRepository;
     private final ProductoService productoService;
-    private final UsuarioRepository usuarioRepository;
     private final UsuarioService usuarioService;
 
+    /**
+     * Crea la boleta en una sola transacción: por cada producto valida y descuenta stock,
+     * toma el precio vigente (oferta o normal) y calcula subtotales y total.
+     * Si un producto no tiene stock suficiente se lanza StockInsuficienteException
+     * y se revierte TODO (no queda stock descontado a medias).
+     */
     @Transactional
-    public Boleta crearBoleta(Long usuarioId, List<LineaPedido> items){
+    public Boleta crearBoleta(Long usuarioId, List<LineaPedido> items) {
         Usuario usuario = usuarioService.buscarPorId(usuarioId);
 
         Boleta boleta = new Boleta();
@@ -36,8 +38,8 @@ public class BoletaService {
 
         int totalCalculado = 0;
 
-        for (LineaPedido item : items ){
-            Producto producto = productoService.descontarStock(item.productoId(),item.cantidad());
+        for (LineaPedido item : items) {
+            Producto producto = productoService.descontarStock(item.productoId(), item.cantidad());
             int precioUnitario = productoService.calcularPrecioUnitario(producto);
             DetalleBoleta detalle = construirDetalle(boleta, producto, item.cantidad(), precioUnitario);
 
@@ -49,8 +51,20 @@ public class BoletaService {
         return boletaRepository.save(boleta);
     }
 
+    public List<Boleta> listarTodo() {
+        return boletaRepository.findAllByOrderByFechaEmisionDesc();
+    }
 
-    public DetalleBoleta construirDetalle(Boleta boleta, Producto producto, int cantidad, int precioUnitario) {
+    public List<Boleta> listarPorUsuario(Long usuarioId) {
+        return boletaRepository.findByUsuario_UsuarioIdOrderByFechaEmisionDesc(usuarioId);
+    }
+
+    public Boleta buscarPorId(Long id) {
+        return boletaRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("No se ha encontrado la boleta"));
+    }
+
+    private DetalleBoleta construirDetalle(Boleta boleta, Producto producto, int cantidad, int precioUnitario) {
         DetalleBoleta detalle = new DetalleBoleta();
         detalle.setBoleta(boleta);
         detalle.setProducto(producto);
@@ -59,6 +73,4 @@ public class BoletaService {
         detalle.setSubtotal(precioUnitario * cantidad);
         return detalle;
     }
-
-
 }

@@ -2,21 +2,26 @@ package GeekManga.backend.boleta;
 
 import GeekManga.backend.detalle.DetalleBoleta;
 import GeekManga.backend.usuario.Usuario;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "boletas")
+@Schema(description = "Boleta (orden de compra) generada al pagar el carrito")
 public class Boleta {
 
     @Id
@@ -31,6 +36,7 @@ public class Boleta {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id")
+    @JsonIgnoreProperties({"run", "tipoUsuario"})
     private Usuario usuario;
 
     @OneToMany(mappedBy = "boleta", cascade = CascadeType.ALL, orphanRemoval = true)

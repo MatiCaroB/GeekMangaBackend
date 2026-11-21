@@ -4,99 +4,83 @@ import GeekManga.backend.categoria.Categoria;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 @Table(name = "productos")
 @Schema(description = "Entidad que representa a un producto registrado en el sistema")
-@Entity
 public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @Schema(description = "Identificador único del producto para gestón interno del sistema técnico",
-            example = "1",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY)
+    @Schema(description = "Identificador único del producto para gestión interna del sistema",
+            example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
-    @Column(nullable = false)
-    @Schema(description = "Código comercial único (SKU) para el negocio, inventario y punto de venta",
-            example = "M0R-BAV-001",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Column(nullable = false, unique = true, length = 50)
+    @NotBlank(message = "El código es obligatorio")
+    @Size(max = 50)
+    @Schema(description = "Código comercial único (SKU) del producto", example = "M001")
     private String codigo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
+    @NotBlank(message = "El nombre del producto es obligatorio")
     @Size(min = 2, max = 50)
-    @NotBlank
-    @Schema(description = "Nombre del producto",
-            example = "Caja Watts",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Schema(description = "Nombre del producto", example = "One Piece - Tomo 1")
     private String producto;
 
-
     @Column(nullable = false)
-    @Schema(description = "Precio del producto",
-            example = "10000",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Min(value = 0, message = "El precio no puede ser negativo")
+    @Schema(description = "Precio normal del producto", example = "15990")
     private int precio;
 
     @Column(nullable = false)
-    @NotBlank
-    @Schema(description = "Marca, corporación del producto",
-            example = "Soprole",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @NotBlank(message = "La marca es obligatoria")
+    @Schema(description = "Marca o editorial del producto", example = "Shueisha")
     private String marca;
 
-
     @Column(nullable = false)
-    @Schema(description = "Unidades disponibles para venta del producto",
-            example = "14",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Min(value = 0, message = "El stock no puede ser negativo")
+    @Schema(description = "Unidades disponibles para la venta", example = "14")
     private int stock;
 
-    @NotNull
     @Column(nullable = false)
-    @Schema(description = "Límite en el que el sistema considera que hay muy poca cantidad disponible de un producto",
-            example = "5",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Min(value = 0, message = "El stock crítico no puede ser negativo")
+    @Schema(description = "Cantidad bajo la cual se considera que queda poco stock", example = "5")
     private int stockCritico;
 
-    @Schema(description = "Señala al sistema si un producto debe llevar su precio de oferta o no",
-            example = "1",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Schema(description = "Indica si el producto se vende con su precio de oferta", example = "true")
     private boolean oferta;
 
-
-
-    @Schema(description = "Precio perteneciente únicamente a cuando un producto tiene su oferta activa",
-            example = "3900",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Min(value = 0, message = "El precio de oferta no puede ser negativo")
+    @Schema(description = "Precio cuando la oferta está activa (debe ser menor al precio normal)",
+            example = "12990", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer precioOferta;
 
-
-    @Size(min = 1, max = 300)
-    @Schema(description = "Descripción del producto",
-            example = "Caja tetrapack de 200ml de jugo de durazno de la marca Nestlé",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Size(max = 300)
+    @Schema(description = "Descripción del producto", example = "Primera edición del clásico manga de Eiichiro Oda.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String descripcion;
 
-    @Schema(description = "Ubicación de una imagen para mostrar junto a un producto, generada automáticamente al subir una imagen",
-            example = "carpeta/carpeta/archivo.jpg",
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+    @Schema(description = "Ruta de la imagen del producto", example = "/images/onepiece.jpg",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String urlFoto;
 
     @ManyToOne
     @JoinColumn(name = "categoria_id", nullable = false)
-
+    @NotNull(message = "La categoría es obligatoria")
+    @Schema(description = "Categoría del producto. Al crear o editar basta con enviar { \"categoriaId\": 1 }")
     private Categoria categoria;
 }
