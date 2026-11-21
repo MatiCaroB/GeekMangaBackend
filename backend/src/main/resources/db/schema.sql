@@ -31,18 +31,8 @@ CREATE TABLE IF NOT EXISTS productos (
 
 CREATE TABLE IF NOT EXISTS boletas (
     id                      BIGINT AUTO_INCREMENT PRIMARY KEY,
-    fechaEmision            TIMESTAMP;
-
-    CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id)
-
-
-    private int total;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "usuario_id")
-    private Usuario usuario;
-
-    @OneToMany(mappedBy = "boleta", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private List<DetalleBoleta> detalles = new ArrayList<>();
-)
+    fechaEmision            TIMESTAMP,
+    total                   INT NOT NULL,
+    usuario_id              BIGINT NOT NULL,
+    CONSTRAINT fk_boleta_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id)
+);
