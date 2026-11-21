@@ -96,7 +96,7 @@ public class Producto {
     private String urlFoto;
 
     @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    @JoinColumn(nullable = false)
+    @JoinColumn(name = "categoria_id", nullable = false)
+
     private Categoria categoria;
 }
