@@ -41,10 +41,13 @@ public class Producto {
     @Schema(description = "Nombre del producto", example = "One Piece - Tomo 1")
     private String producto;
 
+    // Se usan Integer/Boolean (no int/boolean): con Jackson 3 un campo primitivo que falta en el JSON
+    // hace fallar la lectura completa del cuerpo; con wrappers llega null y @NotNull indica qué campo falta.
     @Column(nullable = false)
+    @NotNull(message = "El precio es obligatorio")
     @Min(value = 0, message = "El precio no puede ser negativo")
     @Schema(description = "Precio normal del producto", example = "15990")
-    private int precio;
+    private Integer precio;
 
     @Column(nullable = false)
     @NotBlank(message = "La marca es obligatoria")
@@ -52,17 +55,20 @@ public class Producto {
     private String marca;
 
     @Column(nullable = false)
+    @NotNull(message = "El stock es obligatorio")
     @Min(value = 0, message = "El stock no puede ser negativo")
     @Schema(description = "Unidades disponibles para la venta", example = "14")
-    private int stock;
+    private Integer stock;
 
     @Column(nullable = false)
+    @NotNull(message = "El stock crítico es obligatorio")
     @Min(value = 0, message = "El stock crítico no puede ser negativo")
     @Schema(description = "Cantidad bajo la cual se considera que queda poco stock", example = "5")
-    private int stockCritico;
+    private Integer stockCritico;
 
-    @Schema(description = "Indica si el producto se vende con su precio de oferta", example = "true")
-    private boolean oferta;
+    @Column(nullable = false)
+    @Schema(description = "Indica si el producto se vende con su precio de oferta (si no se envía, queda en false)", example = "true")
+    private Boolean oferta = false;
 
     @Min(value = 0, message = "El precio de oferta no puede ser negativo")
     @Schema(description = "Precio cuando la oferta está activa (debe ser menor al precio normal)",
@@ -83,4 +89,9 @@ public class Producto {
     @NotNull(message = "La categoría es obligatoria")
     @Schema(description = "Categoría del producto. Al crear o editar basta con enviar { \"categoriaId\": 1 }")
     private Categoria categoria;
+
+    /** Nunca devuelve null: si no se indicó, el producto no está en oferta. */
+    public Boolean getOferta() {
+        return Boolean.TRUE.equals(oferta);
+    }
 }

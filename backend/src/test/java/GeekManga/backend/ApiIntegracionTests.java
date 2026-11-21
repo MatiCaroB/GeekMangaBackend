@@ -170,7 +170,10 @@ class ApiIntegracionTests {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"codigo\":\"\",\"producto\":\"\",\"precio\":-1}"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.campos.producto").exists());
+                .andExpect(jsonPath("$.campos.producto").exists())
+                .andExpect(jsonPath("$.campos.precio").exists())
+                .andExpect(jsonPath("$.campos.stock").exists())       // faltaba en el JSON
+                .andExpect(jsonPath("$.campos.categoria").exists());
     }
 
     // ---------- Usuarios ----------

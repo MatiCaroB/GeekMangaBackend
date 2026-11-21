@@ -45,7 +45,7 @@ public class ProductoService {
         producto.setDescripcion(datos.getDescripcion());
         producto.setMarca(datos.getMarca());
         producto.setPrecio(datos.getPrecio());
-        producto.setOferta(datos.isOferta());
+        producto.setOferta(datos.getOferta());
         producto.setPrecioOferta(datos.getPrecioOferta());
         producto.setStock(datos.getStock());
         producto.setStockCritico(datos.getStockCritico());
@@ -96,7 +96,7 @@ public class ProductoService {
     }
 
     public int calcularPrecioUnitario(Producto producto) {
-        if (producto.isOferta() && producto.getPrecioOferta() != null) {
+        if (producto.getOferta() && producto.getPrecioOferta() != null) {
             return producto.getPrecioOferta();
         }
         return producto.getPrecio();
@@ -111,7 +111,7 @@ public class ProductoService {
     }
 
     private void validarOferta(Producto producto) {
-        if (!producto.isOferta()) {
+        if (!producto.getOferta()) {
             return;
         }
         if (producto.getPrecioOferta() == null) {
