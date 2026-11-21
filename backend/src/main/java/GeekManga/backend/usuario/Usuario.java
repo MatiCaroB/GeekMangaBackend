@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +26,7 @@ public class Usuario {
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY)
     private Long usuarioId;
 
+    @Column(nullable = false)
     @NotBlank(message = "Se necesita el nombre")
     @Size(min= 1, max = 25)
     @Schema(description = "Nombre del usuario",
@@ -36,17 +37,20 @@ public class Usuario {
     @Size(min = 1, max = 30)
     @Schema(description = "Apellido/s del usuario",
             example = "Gonzalez",
-            requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private String apellidos;
 
+    @Column(nullable = false)
     @NotBlank(message = "El rut es necesario")
     @Size(max = 10)
     private String run;
 
+    @Column(nullable = false)
     @NotBlank(message = "El correo es obligatorio")
     @Email
     private String correo;
 
+    @Column(nullable = false)
     @NotBlank(message = "La contraseña es obligatoria")
     private String password;
 

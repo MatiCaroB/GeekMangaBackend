@@ -1,6 +1,7 @@
 package GeekManga.backend.producto;
 
 import GeekManga.backend.error.RecursoNoEncontradoException;
+import GeekManga.backend.error.StockInsuficienteException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,4 +54,24 @@ public class ProductoService {
     public List<Producto> listarTodo(){
         return productoRepository.findAll();
     }
+
+    public Producto descontarStock( Long id, int cantidad){
+        Producto producto = productoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNoEncontradoException("El producto no se ha encontrado"));
+
+        if (producto.getStock() < cantidad) {
+            throw new StockInsuficienteException("No hay suficiente stock para el producto: " + producto.getProducto());
+        }
+
+        producto.setStock(producto.getStock() - cantidad);
+        return producto;
+    }
+
+    public int calcularPrecioUnitario(Producto producto) {
+        if (producto.isOferta() && producto.getPrecioOferta() != null){
+            return producto.getPrecioOferta();
+        }
+        return producto.getPrecio();
+    }
+
 }

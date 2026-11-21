@@ -1,16 +1,17 @@
 CREATE TABLE IF NOT EXISTS categorias (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    categoria_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nombre_categoria VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS usuarios (
-    id BIGINT AUTO_INCREMENT    PRIMARY KEY,
+    usuario_id BIGINT AUTO_INCREMENT    PRIMARY KEY,
     nombre                      VARCHAR(100)    NOT NULL
     apellidos                   VARCHAR(100)    ,
     run                         VARCHAR(10)     NOT NULL UNIQUE,
     correo                      VARCHAR(50)     NOT NULL,
     password                    VARCHAR(100)    NOT NULL,
-    tipoUsuario                 VARCHAR(20)     NOT NULL)
+    tipo_usuario                VARCHAR(20)     NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS productos (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -27,3 +28,21 @@ CREATE TABLE IF NOT EXISTS productos (
     categoria_id BIGINT NOT NULL,
     CONSTRAINT fk_producto_categoria FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
+
+CREATE TABLE IF NOT EXISTS boletas (
+    id                      BIGINT AUTO_INCREMENT PRIMARY KEY,
+    fechaEmision            TIMESTAMP;
+
+    CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(usuario_id)
+
+
+    private int total;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "boleta", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<DetalleBoleta> detalles = new ArrayList<>();
+)

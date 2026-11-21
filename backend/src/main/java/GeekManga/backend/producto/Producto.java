@@ -29,11 +29,13 @@ public class Producto {
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
+    @Column(nullable = false)
     @Schema(description = "Código comercial único (SKU) para el negocio, inventario y punto de venta",
             example = "M0R-BAV-001",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private String codigo;
 
+    @Column(nullable = false)
     @Size(min = 2, max = 50)
     @NotBlank
     @Schema(description = "Nombre del producto",
@@ -42,11 +44,13 @@ public class Producto {
     private String producto;
 
 
+    @Column(nullable = false)
     @Schema(description = "Precio del producto",
             example = "10000",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private int precio;
 
+    @Column(nullable = false)
     @NotBlank
     @Schema(description = "Marca, corporación del producto",
             example = "Soprole",
@@ -54,12 +58,14 @@ public class Producto {
     private String marca;
 
 
+    @Column(nullable = false)
     @Schema(description = "Unidades disponibles para venta del producto",
             example = "14",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
     private int stock;
 
     @NotNull
+    @Column(nullable = false)
     @Schema(description = "Límite en el que el sistema considera que hay muy poca cantidad disponible de un producto",
             example = "5",
             requiredMode = Schema.RequiredMode.REQUIRED, accessMode = Schema.AccessMode.READ_WRITE)
@@ -91,5 +97,6 @@ public class Producto {
 
     @ManyToOne
     @JoinColumn(name = "categoria_id")
+    @JoinColumn(nullable = false)
     private Categoria categoria;
 }

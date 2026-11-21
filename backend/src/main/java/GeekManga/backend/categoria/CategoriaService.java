@@ -1,11 +1,10 @@
 package GeekManga.backend.categoria;
 
 
-import GeekManga.backend.categoria.CategoriaRepository;
+
 import GeekManga.backend.error.RecursoNoEncontradoException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,6 +15,7 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
 
+
     @Transactional
     public Categoria agregarCategoria (Categoria categoria){
         return categoriaRepository.save(categoria);
@@ -25,7 +25,7 @@ public class CategoriaService {
         return categoriaRepository.findById(id).map(categoria1 -> {
             categoria1.setNombreCategoria(categoria.getNombreCategoria());
             return categoriaRepository.save(categoria1);
-        }).orElseThrow(() -> new RecursoNoEncontradoException("No se ha encontrado la Categoria"));
+        }).orElseThrow(() -> new RecursoNoEncontradoException("No se ha encontrado la categoria"));
     }
 
     public void eliminarCategoria(Long id){
